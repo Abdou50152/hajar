@@ -1,0 +1,4 @@
+- go to ./src/config/dbConfig.js : add ur connection info and create the db in ur server php my admin
+- npm i 
+- npm run dev
+ enjoy !
