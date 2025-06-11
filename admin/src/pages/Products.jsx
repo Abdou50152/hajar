@@ -261,16 +261,27 @@ const Products = () => {
           .replace(/(^-|-$)/g, '');
       }
       
+      // Format data to match backend expectations
+      const productData = {
+        ...formData,
+        // Convert price to float/number
+        price: parseFloat(formData.price),
+        // Convert stock to integer
+        stock: parseInt(formData.stock, 10),
+        // Ensure categorieId is an integer if present
+        categorieId: formData.categorieId ? parseInt(formData.categorieId, 10) : undefined
+      };
+      
       let productId;
       
       if (isEditing && selectedProduct) {
         // Update existing product
-        await ProductsService.updateProduct(selectedProduct.id, formData);
+        await ProductsService.updateProduct(selectedProduct.id, productData);
         productId = selectedProduct.id;
         showNotification('Product updated successfully', 'success');
       } else {
         // Create new product
-        const response = await ProductsService.createProduct(formData);
+        const response = await ProductsService.createProduct(productData);
         productId = response.id;
         showNotification('Product created successfully', 'success');
       }

@@ -1,7 +1,7 @@
 const db = require("..");
 const httpError = require("http-errors");
 
-const orderProductsTable = db.orderProducts;
+const orderProductsTable = db.orderproducts;
 
 // Créer une entrée dans orders_products
 const createOrderProducts = async (newOrderProductData) => { // Renamed for clarity
@@ -28,8 +28,8 @@ const createOrderProducts = async (newOrderProductData) => { // Renamed for clar
     }
 
     const orderDataToSave = {
-      order_id: orderId,
-      product_id: productId,
+      orderId: orderId,
+      productId: productId,
       quantity: quantity,
       price: price,
       colorId: colorId, // Use the looked-up colorId
@@ -39,8 +39,8 @@ const createOrderProducts = async (newOrderProductData) => { // Renamed for clar
     // Vérifier si le produit existe déjà dans la commande
     const existingEntry = await orderProductsTable.findOne({
       where: {
-        order_id: orderDataToSave.order_id,
-        product_id: orderDataToSave.product_id,
+        orderId: orderDataToSave.orderId,
+        productId: orderDataToSave.productId,
         // Consider if colorId and sizeId should also be part of the uniqueness check
         // For now, assuming a product can only be in an order once, regardless of color/size variant in this table
       },

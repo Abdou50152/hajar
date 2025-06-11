@@ -19,40 +19,60 @@ const createOrder = async (newOrder) => {
 
 // Récupérer toutes les commandes
 const getAllOrders = async (skip, limit) => {
-  const ordersPromise = Orders.findAll({
-    offset: skip,
-    limit: limit,
-    include: [
-      {
-        model: db.users,
-        attributes: ["id", "fullName", "email"], // Specify user attributes needed
+  try {
+    // Use specific aliases and improve the query structure
+    const ordersPromise = Orders.findAll({
+      offset: skip,
+      limit: limit,
+      // Explicitly select certain attributes from orders table
+      attributes: {
+        include: [
+          "id", "reference", "date", "total", "status",
+          "fullName", "phone", "city", "address", // Ces champs existent directement dans la table orders
+          "createdAt", "updatedAt"
+        ]
       },
-      {
-        model: db.orderProducts,
-        attributes: ["id", "quantity", "price"], // Price here is the price at the time of order
-        include: [ // Array to include multiple associated models for orderProducts
-          {
-            model: db.products,
-            attributes: ["id", "name", "mainImage"], // Add other product fields if needed, e.g., mainImage
-          },
-          {
-            model: db.colors,
-            attributes: ["id", "name"], // Get color name
-          },
-          {
-            model: db.size, // Ensure db.size is the correct model name for sizes
-            attributes: ["id", "name"], // Get size name
-          }
-        ],
-      },
-    ],
+      include: [
+        // Nous n'avons plus besoin d'inclure les utilisateurs car les informations client sont directement dans la table orders
+        // La table orderproducts est essentielle pour les produits de la commande
+        {
+          model: db.orderproducts,
+          attributes: ["id", "quantity", "price"],
+          required: false, // Make it a LEFT JOIN to handle orders without products
+          include: [
+            {
+              model: db.products,
+              attributes: ["id", "name", "mainImage"],
+              required: false, // LEFT JOIN
+              include: [{
+                model: db.categories,
+                attributes: ["id", "name"],
+                required: false // LEFT JOIN
+              }]
+            },
+            {
+              model: db.colors,
+              attributes: ["id", "name"],
+              required: false // LEFT JOIN
+            },
+            {
+              model: db.size,
+              attributes: ["id", "name"],
+              required: false // LEFT JOIN
+            }
+          ],
+        },
+      ],
+    });
 
-  });
+    const countPromise = Orders.count();
 
-  const countPromise = Orders.count();
-
-  const [orders, count] = await Promise.all([ordersPromise, countPromise]);
-  return { count, orders };
+    const [orders, count] = await Promise.all([ordersPromise, countPromise]);
+    return { count, orders };
+  } catch (error) {
+    console.error("Error in getAllOrders:", error);
+    throw error; // Re-throw to let the controller handle it
+  }
 };
 
 // Récupérer une commande par ID

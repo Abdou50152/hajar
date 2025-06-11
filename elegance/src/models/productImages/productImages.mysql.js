@@ -1,5 +1,5 @@
-const productImagesModel = (sequileze, DataTypes) => {
-  const ProductImages = sequileze.define(
+const productImagesModel = (sequelize, DataTypes) => {
+  const ProductImages = sequelize.define(
     "productImage",
     {
       imageUrl: {

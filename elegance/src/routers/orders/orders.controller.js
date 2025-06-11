@@ -32,10 +32,57 @@ const httpCreateOrder = async (req, res, next) => {
 const httpGetAllOrders = async (req, res, next) => {
   try {
     const { skip, limit } = getPagination(req.query);
+    console.log(`[GET /orders] Processing request with skip=${skip}, limit=${limit}`);
+    
     const list = await getAllOrders(skip, limit);
-    return res.status(200).json(list);
+    
+    // Clean up the response to handle potential null values
+    const cleanedOrders = list.orders.map(order => {
+      // Convert order to plain object to allow modification
+      const plainOrder = order.get({ plain: true });
+      
+      // Format client information (now directly from orders table)
+      plainOrder.client = {
+        name: plainOrder.fullName || 'Unknown',
+        phone: plainOrder.phone || 'N/A',
+        address: plainOrder.address || 'N/A'
+      };
+      
+      // Check for null values in the nested objects
+      if (plainOrder.orderproducts) {
+        plainOrder.orderproducts = plainOrder.orderproducts.filter(op => op !== null);
+        
+        // Clean up each orderproduct
+        plainOrder.orderproducts = plainOrder.orderproducts.map(op => {
+          if (!op) return null;
+          
+          // Handle potential null product or missing fields
+          if (!op.product) op.product = { name: 'Unknown', id: null };
+          if (!op.product.category) op.product.category = { name: 'Unknown' };
+          if (!op.color) op.color = { name: 'N/A' };
+          if (!op.size) op.size = { name: 'N/A' };
+          
+          return op;
+        }).filter(op => op !== null);
+      } else {
+        plainOrder.orderproducts = [];
+      }
+      
+      return plainOrder;
+    });
+    
+    console.log(`Successfully processed ${cleanedOrders.length} orders`);
+    
+    return res.status(200).json({
+      count: list.count,
+      orders: cleanedOrders
+    });
   } catch (err) {
-    next(err);
+    console.error('[GET /orders] Error:', err);
+    res.status(500).json({
+      message: 'Failed to retrieve orders',
+      error: err.message || 'Unknown error occurred'
+    });
   }
 };
 

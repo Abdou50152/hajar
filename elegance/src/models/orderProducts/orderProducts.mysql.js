@@ -1,6 +1,6 @@
 const orderProductsModel = (sequelize, DataTypes) => {
   const orderProducts = sequelize.define(
-    "orderProducts",
+    "orderproducts",
     {
       quantity: {
         type: DataTypes.INTEGER,

@@ -4,7 +4,7 @@ export const OrderProductsService = {
   // Get all order products
   getAllOrderProducts: async (skip = 0, limit = 10) => {
     try {
-      const response = await api.get(`/orderProducts?skip=${skip}&limit=${limit}`);
+      const response = await api.get(`/orderproducts?skip=${skip}&limit=${limit}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching order products:', error);
@@ -15,7 +15,7 @@ export const OrderProductsService = {
   // Get order products by order ID
   getOrderProductsByOrderId: async (orderId) => {
     try {
-      const response = await api.get(`/orderProducts/order/${orderId}`);
+      const response = await api.get(`/orderproducts/order/${orderId}`);
       return response.data;
     } catch (error) {
       console.error(`Error fetching order products for order id ${orderId}:`, error);
@@ -26,7 +26,7 @@ export const OrderProductsService = {
   // Get order product by ID
   getOrderProductById: async (id) => {
     try {
-      const response = await api.get(`/orderProducts/${id}`);
+      const response = await api.get(`/orderproducts/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Error fetching order product with id ${id}:`, error);
@@ -37,7 +37,7 @@ export const OrderProductsService = {
   // Create new order product
   createOrderProduct: async (orderProductData) => {
     try {
-      const response = await api.post('/orderProducts', orderProductData);
+      const response = await api.post('/orderproducts', orderProductData);
       return response.data;
     } catch (error) {
       console.error('Error creating order product:', error);
@@ -48,7 +48,7 @@ export const OrderProductsService = {
   // Update order product
   updateOrderProduct: async (id, orderProductData) => {
     try {
-      const response = await api.put(`/orderProducts/${id}`, orderProductData);
+      const response = await api.put(`/orderproducts/${id}`, orderProductData);
       return response.data;
     } catch (error) {
       console.error(`Error updating order product with id ${id}:`, error);
@@ -59,7 +59,7 @@ export const OrderProductsService = {
   // Delete order product
   deleteOrderProduct: async (id) => {
     try {
-      const response = await api.delete(`/orderProducts/${id}`);
+      const response = await api.delete(`/orderproducts/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Error deleting order product with id ${id}:`, error);

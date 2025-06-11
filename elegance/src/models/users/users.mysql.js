@@ -13,7 +13,10 @@ const userModel = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        unique: {
+        name: 'users_email_unique_constraint',
+        msg: 'Email address already in use!'
+      },
       },
       password: {
         type: DataTypes.STRING,

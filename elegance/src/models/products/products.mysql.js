@@ -1,5 +1,5 @@
-const productsModel = (sequileze, DataTypes) => {
-    const Products = sequileze.define(
+const productsModel = (sequelize, DataTypes) => {
+    const Products = sequelize.define(
       "product",
           {
       stock : {

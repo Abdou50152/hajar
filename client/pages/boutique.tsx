@@ -192,7 +192,7 @@ const ShopPage = () => {
   const resetFilters = () => {
     setFilters({
       category: '',
-      priceRange: { min: 0, max: 100 },
+      priceRange: { min: 0, max: 1000 },
       colors: [],
       sizes: [],
       sortBy: 'newest',
@@ -203,31 +203,31 @@ const ShopPage = () => {
 
   return (
     <Layout>
-      <div className="flex flex-col md:flex-row gap-8">
+      <div className="flex flex-col md:flex-row gap-8 px-6 sm:px-8 lg:px-12 mb-12">
         {/* Filtres pour desktop */}
         <aside className="hidden md:block w-64 flex-shrink-0">
           <div className="sticky top-24">
             <div className="mb-6">
-              <h3 className="text-lg font-medium mb-4">Catégories</h3>
+              <h3 className="text-lg font-medium mb-4">Toutes les produits</h3>
               <ul className="space-y-2">
-                <li>
+                {/* <li>
                   <button 
-                    className={`w-full text-left px-2 py-1 rounded ${filters.category === '' ? 'bg-pink-100 text-amber-600' : ''}`}
+                    className={`w-full text-left px-2 py-1 rounded ${filters.category === '' ? 'bg-amber-100 text-amber-600' : ''}`}
                     onClick={() => handleCategoryChange('')}
                   >
                     Toutes les catégories
                   </button>
-                </li>
-                {categories.map(category => (
+                </li> */}
+                {/* {categories.map(category => (
                   <li key={category}>
                     <button 
-                      className={`w-full text-left px-2 py-1 rounded capitalize ${filters.category === category ? 'bg-pink-100 text-amber-600' : ''}`}
+                      className={`w-full text-left px-2 py-1 rounded capitalize ${filters.category === category ? 'bg-amber-100 text-amber-600' : ''}`}
                       onClick={() => handleCategoryChange(category)}
                     >
                       {category}
                     </button>
                   </li>
-                ))}
+                ))} */}
               </ul>
             </div>
 
@@ -237,15 +237,15 @@ const ShopPage = () => {
                 <input 
                   type="range" 
                   min="0" 
-                  max="100"
+                  max="1000"
                   value={filters.priceRange.max}
                   onChange={(e) => handlePriceChange(filters.priceRange.min, parseInt(e.target.value))}
                   className="w-full"
                 />
               </div>
               <div className="flex justify-between mt-2">
-                <span>{filters.priceRange.min}€</span>
-                <span>{filters.priceRange.max}€</span>
+                <span>{filters.priceRange.min}DH</span>
+                <span>{filters.priceRange.max}DH</span>
               </div>
             </div>
 
@@ -259,7 +259,7 @@ const ShopPage = () => {
                       onClick={() => handleColorToggle(color)}
                       className={`px-3 py-1 border rounded-full text-sm ${
                         filters.colors.includes(color) 
-                          ? 'bg-pink-100 border-amber-600 text-amber-600' 
+                          ? 'bg-amber-100 border-amber-600 text-amber-600' 
                           : 'border-gray-300'
                       }`}
                     >
@@ -280,7 +280,7 @@ const ShopPage = () => {
                       onClick={() => handleSizeToggle(size)}
                       className={`w-10 h-10 flex items-center justify-center border rounded-md ${
                         filters.sizes.includes(size) 
-                          ? 'bg-pink-100 border-amber-600 text-amber-600' 
+                          ? 'bg-amber-100 border-amber-600 text-amber-600' 
                           : 'border-gray-300'
                       }`}
                     >
@@ -383,7 +383,7 @@ const ShopPage = () => {
               <p className="text-red-500">{error}</p>
               <button 
                 onClick={() => window.location.reload()}
-                className="mt-4 px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors"
+                className="container mx-auto px-6 sm:px-8 lg:px-12 py-8 amber-600 text-white rounded-md hover:bg-amber-700 transition-colors"
               >
                 Réessayer
               </button>

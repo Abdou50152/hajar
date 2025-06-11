@@ -3,8 +3,8 @@ import Button from '../components/Button';
 import DataTable from '../components/shared/DataTable';
 import Modal from '../components/shared/Modal';
 import { useNotification } from '../context/NotificationContext';
+import { OrdersService } from '../services/orders.service';
 
-// This will be replaced with actual API service
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,51 +12,97 @@ const Orders = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const { showNotification } = useNotification();
 
-  // Mock data - will be replaced with API call
+  // Fetch orders from the API
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setOrders([
-        {
-          id: 1,
-          client: { name: 'HAJAR', phone: '+212 634 234 232', address: '12 Rue de Allal fassi' },
-          products: [
-            { name: 'Robe été', category: 'robe', color: 'bleu', quantity: 1, price: 259.99 }
-          ],
-          total: 259.99,
-          status: 'Pending'
-        },
-        {
-          id: 2,
-          client: { name: 'Hayat', phone: '+212 634 234 232', address: '5 Avenue' },
-          products: [
-            { name: 'Foulard soie', category: 'foulard', color: 'rouge', quantity: 2, price: 129.99 },
-            { name: 'Ceinture cuir', category: 'accessoire', color: 'noir', quantity: 1, price: 139.99 }
-          ],
-          total: 499.97,
-          status: 'Pending'
-        }
-      ]);
-      setLoading(false);
-    }, 500);
-  }, []);
+    const fetchOrders = async () => {
+      try {
+        setLoading(true);
+        const response = await OrdersService.getAllOrders();
+        
+        // Debug information
+        console.log('API Response:', response);
+        
+        // Format the orders data if needed
+        const formattedOrders = response.orders.map(order => {
+          // Debug each order
+          console.log(`Order #${order.id}:`, order);
+          console.log(`Order Products:`, order.orderproducts);
+          
+          // Map backend data to format expected by frontend
+          return {
+            id: order.id,
+            client: {
+              name: order.fullName || 'Unknown', 
+              phone: order.phone || 'N/A', 
+              address: order.address || 'N/A'
+            },
+            products: Array.isArray(order.orderproducts) && order.orderproducts.length > 0 
+              ? order.orderproducts.map(op => {
+                  console.log('Processing orderProduct:', op);
+                  return {
+                    name: op.product ? op.product.name : 'Unknown product',
+                    category: op.product ? (op.product.category ? op.product.category.name : 'Unknown') : 'Unknown',
+                    color: op.color ? op.color.name : 'N/A',
+                    quantity: op.quantity || 1,
+                    price: op.price || 0
+                  };
+                }) 
+              : [],
+            total: order.total || 0,
+            status: order.status ? order.status.charAt(0).toUpperCase() + order.status.slice(1) : 'Pending'
+          };
+        });
+        
+        console.log('Formatted orders:', formattedOrders);
+        setOrders(formattedOrders);
+      } catch (error) {
+        console.error('Failed to fetch orders:', error);
+        showNotification('Failed to load orders', 'error');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleConfirm = (orderId) => {
-    setOrders(orders.map(order => 
-      order.id === orderId 
-        ? { ...order, status: 'Confirmed' } 
-        : order
-    ));
-    showNotification('Order confirmed successfully', 'success');
+    fetchOrders();
+  }, [showNotification]);
+  
+  // Function to check if products exist for debugging
+  const hasProducts = (order) => {
+    return Array.isArray(order.products) && order.products.length > 0;
   };
 
-  const handleReject = (orderId) => {
-    setOrders(orders.map(order => 
-      order.id === orderId 
-        ? { ...order, status: 'Rejected' } 
-        : order
-    ));
-    showNotification('Order rejected', 'success');
+  const handleConfirm = async (orderId) => {
+    try {
+      // Call the API to update the order status
+      await OrdersService.updateOrderStatus(orderId, 'confirmed');
+      
+      setOrders(orders.map(order => 
+        order.id === orderId 
+          ? { ...order, status: 'Confirmed' } 
+          : order
+      ));
+      showNotification('Order confirmed successfully', 'success');
+    } catch (error) {
+      console.error('Error confirming order:', error);
+      showNotification('Failed to confirm order', 'error');
+    }
+  };
+
+  const handleReject = async (orderId) => {
+    try {
+      // Call the API to update the order status
+      await OrdersService.updateOrderStatus(orderId, 'refunded');
+      
+      setOrders(orders.map(order => 
+        order.id === orderId 
+          ? { ...order, status: 'Rejected' } 
+          : order
+      ));
+      showNotification('Order rejected', 'success');
+    } catch (error) {
+      console.error('Error rejecting order:', error);
+      showNotification('Failed to reject order', 'error');
+    }
   };
 
   const confirmDelete = (order) => {
@@ -68,7 +114,8 @@ const Orders = () => {
     if (!selectedOrder) return;
     
     try {
-      // This will be replaced with an API call
+      // Call the API to delete the order
+      await OrdersService.deleteOrder(selectedOrder.id);
       setOrders(orders.filter(order => order.id !== selectedOrder.id));
       showNotification('Order deleted successfully', 'success');
       setShowDeleteModal(false);

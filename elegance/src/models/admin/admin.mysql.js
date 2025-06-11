@@ -1,5 +1,5 @@
-const adminModel = (sequileze, DataTypes) => {
-    const admin = sequileze.define(
+const adminModel = (sequelize, DataTypes) => {
+    const admin = sequelize.define(
       "admin",
           {
      full_name: {

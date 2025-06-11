@@ -94,16 +94,22 @@ const httpGetProfile = async (req, res, next) => {
   try {
     // User ID and role are extracted from the token in the auth middleware
     const { id, role } = req.user;
+    console.log(`[DEBUG] Getting profile for role: '${role}' with id: ${id}`);
 
     let user;
     
     if (role === 'admin') {
+      console.log('[DEBUG] Searching for Admin...');
       user = await Admin.findOne({ where: { id } });
+      console.log('[DEBUG] Admin findOne result:', user ? user.toJSON() : null);
     } else {
+      console.log('[DEBUG] Searching for User...');
       user = await Users.findOne({ where: { id } });
+      console.log('[DEBUG] User findOne result:', user ? user.toJSON() : null);
     }
 
     if (!user) {
+      console.log('[DEBUG] User not found in database, throwing 404.');
       throw httpError.NotFound('User not found');
     }
 
@@ -114,8 +120,10 @@ const httpGetProfile = async (req, res, next) => {
     // Add role to response
     userResponse.role = role;
 
+    console.log('[DEBUG] Profile found, sending 200 response.');
     res.status(200).json(userResponse);
   } catch (err) {
+    console.error('[DEBUG] Error in httpGetProfile:', err);
     next(err);
   }
 };

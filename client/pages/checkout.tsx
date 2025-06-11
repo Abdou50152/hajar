@@ -171,12 +171,12 @@ const CheckoutPage: React.FC = () => {
               {cart.map((item, index) => (
                 <div key={index} className="flex justify-between mb-2">
                   <span>{item.name}</span>
-                  <span>{item.quantity} x {item.price}€</span>
+                  <span>{item.quantity} x {item.price}DH</span>
                 </div>
               ))}
               <div className="border-t pt-2 mt-2 font-bold flex justify-between">
                 <span>Total:</span>
-                <span>{total}€</span>
+                <span>{total}DH</span>
               </div>
             </div>
           </div>
@@ -186,7 +186,7 @@ const CheckoutPage: React.FC = () => {
               type="submit"
               disabled={isSubmitting}
               className={`${
-                isSubmitting ? 'bg-blue-300' : 'bg-blue-500 hover:bg-blue-700'
+                isSubmitting ? 'bg-blue-300' : 'bg-amber-500 hover:bg-amber-700'
               } text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center`}
             >
               {isSubmitting ? (
@@ -201,7 +201,7 @@ const CheckoutPage: React.FC = () => {
                 'Commander'
               )}
             </button>
-            <Link href="/panier" className="text-blue-500 hover:text-blue-800">
+            <Link href="/panier" className="text-amber-500 hover:text-amber-800">
               Retour au panier
             </Link>
           </div>
