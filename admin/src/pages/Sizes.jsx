@@ -118,15 +118,15 @@ const Sizes = () => {
         </div>
       )
     },
-    { 
-      key: 'productsCount', 
-      header: 'Products',
-      render: (size) => (
-        <span className="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-800">
-          {size.products?.length || 0} products
-        </span>
-      )
-    }
+    // { 
+    //   key: 'productsCount', 
+    //   header: 'Products',
+    //   render: (size) => (
+    //     <span className="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-800">
+    //       {size.products?.length || 0} products
+    //     </span>
+    //   )
+    // }
   ];
 
   return (

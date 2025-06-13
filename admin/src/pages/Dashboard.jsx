@@ -4,9 +4,9 @@ import StatsCard from '../dashboard/StatsCard';
 
 const Dashboard = () => {
   const stats = [
-    { title: 'Ventes du mois', value: '00,00 MAD', change: '' },
-    { title: 'Nouveaux clients', value: '0', change: '' },
-    { title: 'Articles en stock', value: '0', change: '' }
+    { title: 'Ventes du mois', value: '1890,00 MAD', change: '' },
+    { title: 'Nouveaux clients', value: '6', change: '' },
+    { title: 'Articles en stock', value: '15', change: '' }
   ];
 
   return (

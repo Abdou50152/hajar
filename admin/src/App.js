@@ -13,6 +13,9 @@ import Colors from "./pages/Colors";
 import Sizes from "./pages/Sizes";
 import Users from "./pages/Users";
 import Admins from "./pages/Admins";
+import DeliveryPrices from "./pages/DeliveryPrices";
+import ContactMessages from "./pages/ContactMessages";
+import LoyaltyCards from "./pages/LoyaltyCards";
 import Login from "./pages/Login";
 import { NotificationProvider } from "./context/NotificationContext";
 import AuthMiddleware from "./middleware/AuthMiddleware";
@@ -130,6 +133,30 @@ function App() {
             <AuthMiddleware>
               <Layout>
                 <Admin />
+              </Layout>
+            </AuthMiddleware>
+          } />
+
+          <Route path="/delivery-prices" element={
+            <AuthMiddleware>
+              <Layout>
+                <DeliveryPrices />
+              </Layout>
+            </AuthMiddleware>
+          } />
+
+          <Route path="/contact-messages" element={
+            <AuthMiddleware>
+              <Layout>
+                <ContactMessages />
+              </Layout>
+            </AuthMiddleware>
+          } />
+
+          <Route path="/loyalty-cards" element={
+            <AuthMiddleware>
+              <Layout>
+                <LoyaltyCards />
               </Layout>
             </AuthMiddleware>
           } />

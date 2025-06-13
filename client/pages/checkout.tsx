@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import Link from 'next/link';
 import { useCart } from '../contexts/CartContext';
@@ -14,6 +14,15 @@ const CheckoutPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+    // Mock data for city delivery prices (in production, this would come from an API)
+  const [deliveryPrices, setDeliveryPrices] = useState<{ id: number, city: string, price: number }[]>([
+    { id: 1, city: 'Casablanca', price: 30 },
+    { id: 2, city: 'Rabat', price: 40 },
+    { id: 3, city: 'Marrakech', price: 50 },
+    { id: 4, city: 'Fès', price: 45 },
+    { id: 5, city: 'Tanger', price: 55 }
+  ]);
+  const [deliveryPrice, setDeliveryPrice] = useState(0);
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -21,12 +30,30 @@ const CheckoutPage: React.FC = () => {
     address: ''
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    // Try to load delivery prices from localStorage
+    try {
+      const storedPrices = localStorage.getItem('deliveryPrices');
+      if (storedPrices) {
+        setDeliveryPrices(JSON.parse(storedPrices));
+      }
+    } catch (error) {
+      console.error('Error loading delivery prices from localStorage:', error);
+    }
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
+    
+    // Update delivery price when city changes
+    if (name === 'city' && value) {
+      const selectedCity = deliveryPrices.find(item => item.city === value);
+      setDeliveryPrice(selectedCity ? selectedCity.price : 0);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,7 +82,8 @@ const CheckoutPage: React.FC = () => {
       const orderData = {
         reference: orderReference,
         date: new Date().toISOString(),
-        total: total,
+        total: total + deliveryPrice, // Add delivery price to total
+        deliveryPrice: deliveryPrice,
         status: 'pending' as const,
         ...formData,
         userId: user.id // User is confirmed to exist and have an id by this point
@@ -139,15 +167,21 @@ const CheckoutPage: React.FC = () => {
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="city">
               Ville
             </label>
-            <input
-              type="text"
+            <select
               id="city"
               name="city"
               value={formData.city}
               onChange={handleChange}
               required
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
+            >
+              <option value="">Sélectionner une ville</option>
+              {deliveryPrices.map((city) => (
+                <option key={city.id} value={city.city}>
+                  {city.city} (Livraison: {city.price} DH)
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="mb-6">
@@ -174,9 +208,15 @@ const CheckoutPage: React.FC = () => {
                   <span>{item.quantity} x {item.price}DH</span>
                 </div>
               ))}
+              {deliveryPrice > 0 && (
+                <div className="flex justify-between mb-2">
+                  <span>Frais de livraison ({formData.city}):</span>
+                  <span>{deliveryPrice} DH</span>
+                </div>
+              )}
               <div className="border-t pt-2 mt-2 font-bold flex justify-between">
                 <span>Total:</span>
-                <span>{total}DH</span>
+                <span>{total + deliveryPrice} DH</span>
               </div>
             </div>
           </div>

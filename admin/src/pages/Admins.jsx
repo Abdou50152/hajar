@@ -24,12 +24,28 @@ const Admins = () => {
   const fetchAdmins = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await AdminService.getAllAdmins();
-      setAdmins(data.admins || []);
+      
+      // Données de test statiques pour les administrateurs
+      const testAdmins = [
+        {
+          id: 1,
+          username: 'hajar',
+          email: 'hajar@admin.com',
+          role: 'superadmin'
+        },
+        {
+          id: 2,
+          username: 'admin',
+          email: 'admin@example.com',
+          role: 'admin'
+        }
+      ];
+      
+      setAdmins(testAdmins);
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching admins:', error);
-      showNotification('Failed to load admins', 'error');
+      console.error('Erreur lors du chargement des administrateurs:', error);
+      showNotification('Échec du chargement des administrateurs', 'error');
       setLoading(false);
     }
   }, [showNotification]);

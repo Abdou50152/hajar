@@ -12,6 +12,9 @@ const Navigation = () => {
     { name: 'Couleurs', path: '/colors', icon: 'color-swatch' },
     { name: 'Tailles', path: '/sizes', icon: 'template' },
     { name: 'Commandes', path: '/orders', icon: 'shopping-cart' },
+    { name: 'Frais de livraison', path: '/delivery-prices', icon: 'truck' },
+    { name: 'Messages', path: '/contact-messages', icon: 'mail' },
+    { name: 'Carte fidélité', path: '/loyalty-cards', icon: 'gift' },
     { name: 'Utilisateurs', path: '/users', icon: 'users' },
     { name: 'Administrateurs', path: '/admins', icon: 'shield-check' },
   ];
@@ -71,6 +74,27 @@ const Navigation = () => {
         return (
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
             <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
+          </svg>
+        );
+      case 'truck':
+        return (
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+            <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1v-5h2.05a2.5 2.5 0 014.9 0H18a1 1 0 001-1V8a1 1 0 00-.293-.707l-3-3A1 1 0 0015 4H3z" />
+          </svg>
+        );
+      case 'mail':
+        return (
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+          </svg>
+        );
+      case 'gift':
+        return (
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fillRule="evenodd" d="M5 5a3 3 0 015-2.236A3 3 0 0114.83 6H16a2 2 0 110 4h-5V9a1 1 0 10-2 0v1H4a2 2 0 110-4h1.17C5.06 5.687 5 5.35 5 5zm4 1V5a1 1 0 10-1 1h1zm3 0a1 1 0 10-1-1v1h1z" clipRule="evenodd" />
+            <path d="M9 11H3v5a2 2 0 002 2h4v-7zm2 7h4a2 2 0 002-2v-5h-6v7z" />
           </svg>
         );
       default:

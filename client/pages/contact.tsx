@@ -22,14 +22,42 @@ const ContactPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Simuler l'envoi du formulaire (à remplacer par votre logique d'envoi réelle)
-    setFormStatus({ success: true, error: false, message: 'Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.' });
-    
-    // Réinitialiser le formulaire
-    setFormData({ name: '', email: '', subject: '', message: '' });
-    
-    // En cas d'erreur, vous pourriez faire:
-    // setFormStatus({ success: false, error: true, message: 'Une erreur est survenue. Veuillez réessayer.' });
+    try {
+      // Création du message avec date et ID
+      const newMessage = {
+        id: Date.now(),
+        date: new Date().toISOString(),
+        status: 'unread',
+        ...formData
+      };
+
+      // Récupérer les messages existants ou initialiser un tableau vide
+      const existingMessages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+      
+      // Ajouter le nouveau message
+      existingMessages.unshift(newMessage); // Ajoute au début du tableau
+      
+      // Sauvegarder dans localStorage
+      localStorage.setItem('contactMessages', JSON.stringify(existingMessages));
+      
+      // Montrer le succès
+      setFormStatus({ 
+        success: true, 
+        error: false, 
+        message: 'Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.' 
+      });
+      
+      // Réinitialiser le formulaire
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (error) {
+      // En cas d'erreur
+      setFormStatus({ 
+        success: false, 
+        error: true, 
+        message: 'Une erreur est survenue. Veuillez réessayer.' 
+      });
+      console.error('Erreur lors de l\'envoi du message:', error);
+    }
   };
 
   return (

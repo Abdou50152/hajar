@@ -25,12 +25,70 @@ const Users = () => {
   const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await UsersService.getAllUsers();
-      setUsers(data.users || []);
+      
+      // Données de test statiques pour les utilisateurs
+      const testUsers = [
+        {
+          id: 1,
+          name: 'Malak alami',
+          email: 'malak.alami@gmail.com',
+          phone: '0612345678',
+          address: '12 Rue de Allal Fassi, Marrakech',
+          orders: 3,
+          lastOrder: '2025-06-10'
+        },
+        {
+          id: 2,
+          name: 'Fatima Benchekroun',
+          email: 'fatima.benchekroun@gmail.com',
+          phone: '0623456789',
+          address: '5 Avenue, Rabat',
+          orders: 5,
+          lastOrder: '2025-06-12'
+        },
+        {
+          id: 3,
+          name: 'Karima Mejat',
+          email: 'karima.mejat@gmail.com',
+          phone: '0634567890',
+          address: '8 Boulevard Mohammed V, Casablanca',
+          orders: 1,
+          lastOrder: '2025-06-08'
+        },
+        {
+          id: 4,
+          name: 'hakima el houari',
+          email: 'hakima.elhouari@gmail.com',
+          phone: '0645678901',
+          address: '15 Rue Tarik Ibn Ziad, Rabat',
+          orders: 2,
+          lastOrder: '2025-06-13'
+        },
+        {
+          id: 5,
+          name: 'Laila elaa',
+          email: 'laila.elaa@gmail.com',
+          phone: '0656789012',
+          address: '25 Rue Ibn Khaldoun, Tanger',
+          orders: 4,
+          lastOrder: '2025-06-05'
+        },
+        {
+          id: 6,
+          name: 'Fadwa haddad',
+          email: 'fadwa.haddad@gmail.com',
+          phone: '0667890123',
+          address: '7 Avenue Hassan II, Fès',
+          orders: 2,
+          lastOrder: '2025-05-28'
+        }
+      ];
+      
+      setUsers(testUsers);
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching users:', error);
-      showNotification('Failed to load users', 'error');
+      console.error('Erreur lors du chargement des utilisateurs:', error);
+      showNotification('Échec du chargement des utilisateurs', 'error');
       setLoading(false);
     }
   }, [showNotification]);
@@ -235,15 +293,47 @@ const Users = () => {
           </form>
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-xl font-semibold text-amber-800 mb-4">Users List</h3>
-          <DataTable
-            columns={columns}
-            data={users}
-            onEdit={handleEdit}
-            onDelete={confirmDelete}
-            emptyMessage="No users available"
-          />
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr className="bg-gray-50">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Commandes</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dernière commande</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {users.length === 0 ? (
+                <tr>
+                  <td colSpan="5" className="px-6 py-4 text-center text-sm text-gray-500">
+                    Aucun utilisateur disponible
+                  </td>
+                </tr>
+              ) : (
+                users.map((user) => (
+                  <tr key={user.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="font-medium text-gray-900">{user.name}</div>
+                      <div className="text-sm text-gray-500">{user.email}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{user.phone}</div>
+                      <div className="text-sm text-gray-500">{user.address}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center">
+                      <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-amber-100 text-amber-800">
+                        {user.orders}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {user.lastOrder}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       )}
 

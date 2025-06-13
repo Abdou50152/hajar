@@ -108,7 +108,7 @@ const Categories = () => {
   const columns = [
     { 
       key: 'name', 
-      header: 'Name',
+      header: 'Nom',
       render: (category) => (
         <div>
           <div className="text-sm font-medium text-gray-900">{category.name}</div>
@@ -121,17 +121,8 @@ const Categories = () => {
       header: 'Description',
       render: (category) => (
         <div className="text-sm text-gray-500 max-w-md truncate">
-          {category.description || 'No description'}
+          {category.description || 'Aucune description'}
         </div>
-      )
-    },
-    { 
-      key: 'productsCount', 
-      header: 'Products',
-      render: (category) => (
-        <span className="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-800">
-          {category.products?.length || 0} products
-        </span>
       )
     }
   ];
